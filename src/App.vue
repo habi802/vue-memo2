@@ -23,7 +23,7 @@
 </template>
 
 <style lang="scss" scoped>
-.app .container {
-  max-width: 576px;
-}
+  .app .container {
+    max-width: 576px;
+  }
 </style>
