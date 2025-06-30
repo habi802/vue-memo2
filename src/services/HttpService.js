@@ -8,6 +8,8 @@ class HttpService {
 
   async insertMemo(item) {
     console.log('insertMemo - item:', item);
+    const res = await axios.post('/memo', item);
+    return res.data;
   }
 
   async selectMemo(params) {
@@ -21,10 +23,15 @@ class HttpService {
 
   async selectMemoDetail(id) {
     console.log('selectMemoDetail - id:', id);
+    const res = await axios.get(`/memo/${id}`);
+    console.log('selectMemoDetail - res.data:', res.data);
+    return res.data;
   }
 
   async updateMemo(item) {
     console.log('updateMemo - item:', item);
+    const res = await axios.put('/memo', item);
+    return res.data;
   }
 
   async deleteMemo(params) {

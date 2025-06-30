@@ -11,21 +11,38 @@
     getItems({});
   });
 
-  const getItems = async (param) => {
+  const getItems = async param => {
     const data = await httpService.selectMemo(param);
     state.memos = data.resultData;
     console.log('state.memos:', state.memos);
   };
+  
+  const removeItem = async (id) => {
+    console.log('removeItem:', id);
+
+    if (confirm('삭제하시겠습니까?')) {
+      console.log('그래, 삭제하겠네.');
+      const params = { memo_id: id };
+      const data = await httpService.deleteMemo(params);
+      if (data.resultData === 1) {
+        //getItems({});
+        const deleteIdx = state.memos.findIndex(item => item.id === id);
+        if (deleteIdx >= 0) {
+          state.memos.splice(deleteIdx, 1);
+        }
+      }
+    }
+  }
 </script>
 
 <template>
   <h1>Home.vue</h1>
   <div class="memo-list">
-    <MemoCard v-for="m in state.memos" :item="m" :key="m.id" />
-
-    <router-link to="/memos/add" class="add btn btn-light">
+    <router-link to="/add" class="add btn btn-light">
       + 추가하기
     </router-link>
+
+    <MemoCard v-for="m in state.memos" :item="m" :key="m.id" @delete-item="removeItem" />
   </div>
 </template>
 
