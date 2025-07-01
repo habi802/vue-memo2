@@ -16,7 +16,9 @@
   });
 
   onMounted(() => {
-    findById();
+    if (route.params.memoId) {
+      findById();
+    }
   });
 
   const findById = async () => {
@@ -49,34 +51,25 @@
       return;
     }
 
-    if (route.params.memoId) {
-      // 수정 처리
-      const bodyJson = {
-        memoId: state.memo.memoId,
-        title: state.memo.title,
-        ctnts: state.memo.ctnts
-      };
-      const data = await httpService.updateMemo(bodyJson);
-      if (data.resultData === 1) {
-        // 수정 성공
-        router.push({ path: '/' });
-      } else {
-        // 수정 실패
-        alert(data.resultMessage);
-      }
-      return;
-    }
-    // 등록 처리
+    let data = null;
     const bodyJson = {
       title: state.memo.title,
       ctnts: state.memo.ctnts
     };
-    const data = await httpService.insertMemo(bodyJson);
+    if (route.params.memoId) {
+      // 수정 처리
+      bodyJson.memoId = state.memo.memoId;
+      data = await httpService.updateMemo(bodyJson);
+    } else {
+      // 등록 처리
+      data = await httpService.insertMemo(bodyJson);
+    }
+    
     if (data.resultData === 1) {
-      // 등록 성공, 홈 화면으로 라우터 처리
+      // 등록 및 수정 성공, 홈 화면으로 라우터 처리
       router.push({ path: '/' });
     } else {
-      // 등록 실패
+      // 등록 및 수정 실패
       alert(data.resultMessage);
     }
   };
